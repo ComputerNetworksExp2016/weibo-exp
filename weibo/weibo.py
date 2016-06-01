@@ -68,8 +68,6 @@ class Weibo(object):
         # Get cross-domain cookies.
         self.session.get(data['data']['loginresulturl']);
 
-        self.users = {}
-
     def save(self, file=None):
         if file is None:
             file = self.PICKLE_FILE
@@ -146,9 +144,6 @@ class Weibo(object):
 
     def user(self, uid):
         """Return a certain user"""
-        user = self.users.get(uid)
-        if user is None:
-            pass
 
         return user
 
