@@ -13,23 +13,24 @@ logging.basicConfig(level=logging.DEBUG)
 
 class Post(object):
     """docstring for Post"""
-    def __init__(self, uid, created_at, length, reposts, comments, likes):
+    def __init__(self, uid, created_at, length, repost_num, comment_num, like_num):
         self.uid = uid
         self.created_at = created_at
         self.length = length
-        self.reposts = reposts
-        self.comments = comments
-        self.likes = likes
+        self.repost_num = repost_num
+        self.comment_num = comment_num
+        self.like_num = like_num
 
 class User(object):
     """docstring for User"""
-    def __init__(self, uid, gender, location, posts, followings, followers):
+    def __init__(self, uid, gender, location, posts, following_num, follower_num, following_uids):
         self.uid = uid
         self.gender = gender
         self.location = location
         self.posts = posts
-        self.followings = followings
-        self.followers = followers
+        self.following_num = following_num
+        self.follower_num = follower_num
+        self.following_uids = following_uids
 
 class Weibo(object):
     """Client for weibo.com."""
@@ -110,10 +111,10 @@ class Weibo(object):
                         uid = j['mblog']['user']['id']
                         created_at = j['mblog']['created_timestamp']
                         length = j['mblog']['textLength']
-                        reposts = j['mblog']['reposts_count']
-                        comments = j['mblog']['comments_count']
-                        likes = j['mblog']['like_count']
-                        posts[mid] = Post(uid,created_at,length,reposts,comments,likes)
+                        repost_num = j['mblog']['reposts_count']
+                        comment_num = j['mblog']['comments_count']
+                        like_num = j['mblog']['like_count']
+                        posts[mid] = Post(uid,created_at,length,repost_num,comment_num,like_num)
                     break
                 except Exception as e:
                     logging.error(e)
