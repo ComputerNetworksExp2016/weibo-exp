@@ -10,10 +10,6 @@ from requests import Session
 
 logging.basicConfig(level=logging.DEBUG)
 
-USER_AGENT = 'Mozilla/5.0 (iPhone; CPU iPhone OS 9_3 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Version/9.0 Mobile/13E188a Safari/601.1'
-PICKLE_FILE = 'weibo.pickle'
-
-
 class Post(object):
     """docstring for Post"""
     def __init__(self, uid, created_at, length, reposts, comments, likes):
@@ -37,6 +33,9 @@ class User(object):
 class Weibo(object):
     """Client for weibo.com."""
 
+    USER_AGENT = 'Mozilla/5.0 (iPhone; CPU iPhone OS 9_3 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Version/9.0 Mobile/13E188a Safari/601.1'
+    PICKLE_FILE = 'weibo.pickle'
+
     def __init__(self, username, password):
         """Create a new client."""
         logging.debug('Logging in with the username %s', username)
@@ -52,7 +51,7 @@ class Weibo(object):
         }
         headers = {
             'Referer': 'https://passport.weibo.cn/signin/',
-            'User-Agent': USER_AGENT
+            'User-Agent': self.USER_AGENT
         }
         r = self.session.post('https://passport.weibo.cn/sso/login',
                               data=payload, headers=headers)
@@ -70,13 +69,19 @@ class Weibo(object):
 
         self.users = {}
 
-    def save(self, file=PICKLE_FILE):
+    def save(self, file=None):
+        if file is None:
+            file = self.PICKLE_FILE
+
         logging.debug('Saving to %s.', file)
         pickle.dump(self, open(file, 'wb'))
 
     @classmethod
-    def from_pickle(cls, file=PICKLE_FILE):
+    def from_pickle(cls, file=None):
         """Load a client from a pickle file if possible."""
+        if file is None:
+            file = cls.PICKLE_FILE
+
         if Path(file).exists():
             logging.debug('Loading from %s.', file)
             return pickle.load(open(file, 'rb'))
