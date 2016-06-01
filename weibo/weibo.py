@@ -149,34 +149,37 @@ class Weibo(object):
 
     def followings(self, uid):
         """Return following uids"""
+        headers = {'User-Agent': self.USER_AGENT}
         followingsID = []
         i = 1
         sumCount = 0
         r = self.session.get
         while 1:
             sleep(1)
-            r = self.session.get('http://m.weibo.cn/page/json?containerid=%s_-_FOLLOWERS&page=%d' % (uid,i))
+            r = self.session.get('http://m.weibo.cn/page/json?containerid=100505%s_-_FOLLOWERS&page=%d' % (uid,i),
+                                 headers=headers)
+            i = i + 1;
             r.raise_for_status()
             data = json.loads(r.content.decode())
             count = data['count']
-            if count == 'null':
+            if count is None:
                 break
             l = data['cards'][0]['card_group']
             for j in l:
-                uid = j['user']['id']
-                followingsID.append(uid);
+                followID = j['user']['id']
+                followingsID.append(followID);
             pass
-            i = i + 1;
         pass
+        # print(followingsID)
         return followingsID
 
 
 if __name__ == '__main__':
     client = Weibo.from_pickle()
     # client.topic_posts('1008086edfd628a87d2ee80e5a4352f13de408')
-    # followingsID = client.followings('1005055324474591')
-    # print(followingsID)
     client.save()
+    followingsID = client.followings('5324474591')
+    # print(followingsID)
     # client.topic_posts('1008086edfd628a87d2ee80e5a4352f13de408')
-    client.topic_followers('1008086edfd628a87d2ee80e5a4352f13de408')
+    # client.topic_followers('1008086edfd628a87d2ee80e5a4352f13de408')
 
