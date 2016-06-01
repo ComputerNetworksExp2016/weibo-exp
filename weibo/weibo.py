@@ -130,7 +130,7 @@ class Weibo(object):
                 try:
                     sleep(1)
                     r = self.session.get('http://m.weibo.cn/page/pageJson?&containerid=230403_-_%s&page=%d' % (containerid,i))
-                    r.raise_for_status
+                    r.raise_for_status()
                     data = json.loads(r.content.decode())
                     l = data['cards'][0]['card_group']
                     for j in l:
