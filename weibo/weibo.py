@@ -1,4 +1,5 @@
 from base64 import b64encode
+from time import sleep
 from getpass import getpass
 import json
 import logging
@@ -93,25 +94,55 @@ class Weibo(object):
 
     def topic_posts(self, containerid):
         """Return posts of a certain topic."""
-        posts = []
-        for i in range(2,3):
-            r = self.session.get('http://m.weibo.cn/page/pageJson?containerid=%s&page=%d' % (containerid,i))
-            r.raise_for_status()
-            data = json.loads(r.content.decode())
-            l = data['cards'][0]['card_group']
-            for j in range(9):
-                uid = l[j]['mblog']['id']
-                created_at = l[j]['mblog']['created_timestamp']
-                length = l[j]['mblog']['textLength']
-                reposts = l[j]['mblog']['reposts_count']
-                comments = l[j]['mblog']['comments_count']
-                likes = l[j]['mblog']['like_count']
-                print(uid,created_at,length,reposts,comments,likes)
-                posts.append(Post(uid,created_at,length,reposts,comments,likes))
-        pass 
+        posts = {}
+        headers = {'User-Agent': self.USER_AGENT}
+        for i in range(2,101):
+            faliure = 0
+            while faliure<3:
+                try:
+                    sleep(1)
+                    r = self.session.get('http://m.weibo.cn/page/pageJson?containerid=%s&page=%d' % (containerid,i),
+                                         headers=headers)
+                    r.raise_for_status()
+                    data = json.loads(r.content.decode())
+                    l = data['cards'][0]['card_group']
+                    for j in l:
+                        logging.debug(len(posts))
+                        mid = j['mblog']['id']
+                        uid = j['mblog']['user']['id']
+                        created_at = j['mblog']['created_timestamp']
+                        length = j['mblog']['textLength']
+                        reposts = j['mblog']['reposts_count']
+                        comments = j['mblog']['comments_count']
+                        likes = j['mblog']['like_count']
+                        posts[mid] = Post(uid,created_at,length,reposts,comments,likes)
+                    break
+                except Exception as e:
+                    logging.error(e)
+                    faliure += 1
+        return posts
+
     def topic_followers(self, containerid):
         """Return followers of a certain topic."""
-        pass
+        followers_id = []
+        for i in range(2,501):
+            sleep(1)
+            faliure = 0
+            while faliure<3:
+                try:
+                    sleep(1)
+                    r = self.session.get('http://m.weibo.cn/page/pageJson?&containerid=230403_-_%s&page=%d' % (containerid,i))
+                    r.raise_for_status
+                    data = json.loads(r.content.decode())
+                    l = data['cards'][0]['card_group']
+                    for j in l:
+                        logging.debug(len(followers_id))
+                        followers_id.append(j['user']['id'])
+                    break
+                except Exception as e:
+                    logging.error(e)
+                    faliure += 1
+        return followers_id
 
     def user(self, uid):
         """Return a certain user"""
@@ -128,6 +159,7 @@ class Weibo(object):
 
 if __name__ == '__main__':
     client = Weibo.from_pickle()
-    client.topic_posts('1008086edfd628a87d2ee80e5a4352f13de408')
     client.save()
+    # client.topic_posts('1008086edfd628a87d2ee80e5a4352f13de408')
+    client.topic_followers('1008086edfd628a87d2ee80e5a4352f13de408')
 
