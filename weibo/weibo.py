@@ -93,8 +93,22 @@ class Weibo(object):
 
     def topic_posts(self, containerid):
         """Return posts of a certain topic."""
-        pass
-
+        posts = []
+        for i in range(2,3):
+            r = self.session.get('http://m.weibo.cn/page/pageJson?containerid=%s&page=%d' % (containerid,i))
+            r.raise_for_status()
+            data = json.loads(r.content.decode())
+            l = data['cards'][0]['card_group']
+            for j in range(9):
+                uid = l[j]['mblog']['id']
+                created_at = l[j]['mblog']['created_timestamp']
+                length = l[j]['mblog']['textLength']
+                reposts = l[j]['mblog']['reposts_count']
+                comments = l[j]['mblog']['comments_count']
+                likes = l[j]['mblog']['like_count']
+                print(uid,created_at,length,reposts,comments,likes)
+                posts.append(Post(uid,created_at,length,reposts,comments,likes))
+        pass 
     def topic_followers(self, containerid):
         """Return followers of a certain topic."""
         pass
@@ -114,4 +128,6 @@ class Weibo(object):
 
 if __name__ == '__main__':
     client = Weibo.from_pickle()
+    client.topic_posts('1008086edfd628a87d2ee80e5a4352f13de408')
     client.save()
+
