@@ -228,8 +228,8 @@ class Weibo(object):
 
 
                 following_uids = []
-                for following_uid in self.followings(uid):
-                    following_uids.append(following_uid)
+                # for following_uid in self.followings(uid):
+                #     following_uids.append(following_uid)
 
                 return User(uid, gender, age, location, post_num, following_num, follower_num, following_uids)
             except Exception as e:
