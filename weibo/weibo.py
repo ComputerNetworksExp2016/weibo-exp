@@ -53,10 +53,9 @@ class Weibo(object):
         }
         headers = {
             'Referer': 'https://passport.weibo.cn/signin/',
-            'User-Agent': self.USER_AGENT
         }
-        r = self.session.post('https://passport.weibo.cn/sso/login',
-                              data=payload, headers=headers)
+        r = self.post('https://passport.weibo.cn/sso/login',
+                      data=payload, headers=headers)
         r.raise_for_status()
 
         data = json.loads(r.content.decode())
@@ -67,7 +66,7 @@ class Weibo(object):
         logging.info('Logged in, uid: %s', self.uid)
 
         # Get cross-domain cookies.
-        self.session.get(data['data']['loginresulturl']);
+        self.get(data['data']['loginresulturl']);
 
     def save(self, file=None):
         if file is None:
@@ -91,17 +90,29 @@ class Weibo(object):
             password = getpass('Password for {}: '.format(username))
             return cls(username, password)
 
+    def get(self, url, **kw):
+        if 'headers' not in kw:
+            kw['headers'] = {}
+        kw['headers']['User-Agent'] = self.USER_AGENT
+
+        self.session.get(url, **kw)
+
+    def post(self, url, **kw):
+        if 'headers' not in kw:
+            kw['headers'] = {}
+        kw['headers']['User-Agent'] = self.USER_AGENT
+
+        self.session.post(url, **kw)
+
     def topic_posts(self, containerid):
         """Return posts of a certain topic."""
         posts = {}
-        headers = {'User-Agent': self.USER_AGENT}
         for i in range(2,101):
             faliure = 0
             while faliure<3:
                 try:
                     sleep(1)
-                    r = self.session.get('http://m.weibo.cn/page/pageJson?containerid=%s&page=%d' % (containerid,i),
-                                         headers=headers)
+                    r = self.get('http://m.weibo.cn/page/pageJson?containerid=%s&page=%d' % (containerid,i))
                     r.raise_for_status()
                     data = json.loads(r.content.decode())
                     l = data['cards'][0]['card_group']
@@ -130,7 +141,7 @@ class Weibo(object):
             while faliure<3:
                 try:
                     sleep(1)
-                    r = self.session.get('http://m.weibo.cn/page/pageJson?&containerid=230403_-_%s&page=%d' % (containerid,i))
+                    r = self.get('http://m.weibo.cn/page/pageJson?&containerid=230403_-_%s&page=%d' % (containerid,i))
                     r.raise_for_status()
                     data = json.loads(r.content.decode())
                     l = data['cards'][0]['card_group']
@@ -150,15 +161,12 @@ class Weibo(object):
 
     def followings(self, uid):
         """Return following uids"""
-        headers = {'User-Agent': self.USER_AGENT}
         followingsID = []
         i = 1
         sumCount = 0
-        r = self.session.get
         while 1:
             sleep(1)
-            r = self.session.get('http://m.weibo.cn/page/json?containerid=100505%s_-_FOLLOWERS&page=%d' % (uid,i),
-                                 headers=headers)
+            r = self.get('http://m.weibo.cn/page/json?containerid=100505%s_-_FOLLOWERS&page=%d' % (uid,i))
             i = i + 1;
             r.raise_for_status()
             data = json.loads(r.content.decode())
