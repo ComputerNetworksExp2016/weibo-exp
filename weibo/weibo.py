@@ -37,6 +37,7 @@ class Weibo(object):
 
     USER_AGENT = 'Mozilla/5.0 (iPhone; CPU iPhone OS 9_3 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Version/9.0 Mobile/13E188a Safari/601.1'
     PICKLE_FILE = 'weibo.pickle'
+    REQUEST_INTERVAL = 1
 
     def __init__(self, username, password):
         """Create a new client."""
@@ -95,6 +96,7 @@ class Weibo(object):
             kw['headers'] = {}
         kw['headers']['User-Agent'] = self.USER_AGENT
 
+        sleep(self.REQUEST_INTERVAL)
         self.session.get(url, **kw)
 
     def post(self, url, **kw):
@@ -102,6 +104,7 @@ class Weibo(object):
             kw['headers'] = {}
         kw['headers']['User-Agent'] = self.USER_AGENT
 
+        sleep(self.REQUEST_INTERVAL)
         self.session.post(url, **kw)
 
     def topic_posts(self, containerid):
@@ -111,7 +114,6 @@ class Weibo(object):
             faliure = 0
             while faliure<3:
                 try:
-                    sleep(1)
                     r = self.get('http://m.weibo.cn/page/pageJson?containerid=%s&page=%d' % (containerid,i))
                     r.raise_for_status()
                     data = json.loads(r.content.decode())
@@ -136,11 +138,9 @@ class Weibo(object):
         """Return followers of a certain topic."""
         followers_id = []
         for i in range(2,501):
-            sleep(1)
             faliure = 0
             while faliure<3:
                 try:
-                    sleep(1)
                     r = self.get('http://m.weibo.cn/page/pageJson?&containerid=230403_-_%s&page=%d' % (containerid,i))
                     r.raise_for_status()
                     data = json.loads(r.content.decode())
@@ -165,7 +165,6 @@ class Weibo(object):
         i = 1
         sumCount = 0
         while 1:
-            sleep(1)
             r = self.get('http://m.weibo.cn/page/json?containerid=100505%s_-_FOLLOWERS&page=%d' % (uid,i))
             i = i + 1;
             r.raise_for_status()
