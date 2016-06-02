@@ -131,13 +131,15 @@ class Weibo(object):
 
     def topic_posts(self, containerid):
         """Return posts of a certain topic."""
-        for i in range(2, 101):
+        next_cursor = None
+        for i in range(30, 31):
             failure = 0
             while failure < 3:
                 try:
-                    r = self.get('http://m.weibo.cn/page/pageJson?containerid=%s&page=%d' % (containerid, i))
+                    r = self.get('http://m.weibo.cn/page/pageJson?containerid=%s&next_cursor=%s&page=%d' % (containerid,next_cursor,i))
                     r.raise_for_status()
                     data = json.loads(r.content.decode())
+                    next_cursor = data['next_cursor']
                     l = data['cards'][0]['card_group']
                     for j in l:
                         mid = j['mblog']['id']
