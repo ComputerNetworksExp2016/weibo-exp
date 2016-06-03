@@ -66,9 +66,18 @@ def get_count(key):
 followers_count = get_count('topic_followers')
 participants_count = get_count('topic_participants')
 
-print('topic_followers = ', followers_count)
-print('topic_participants = ', participants_count)
+# print('topic_followers = ', followers_count)
+# print('topic_participants = ', participants_count)
 
+with open('participants.csv', 'w') as file:
+	for f in participants_count:
+		for info in participants_count[f]:
+			file.write('%s,%d\n' % (info, participants_count[f][info]))
+
+with open('followers.csv', 'w') as file:
+	for f in followers_count:
+		for info in followers_count[f]:
+			file.write('%s,%d\n' % (info, followers_count[f][info]))
 
 
 
