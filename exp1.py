@@ -20,34 +20,51 @@ def get_count(key):
 
 	for i in data[key]:
 
-		l = data[key][i].location
-		a = data[key][i].age
-		g = data[key][i].gender
+		user = data[key][i]
+		if user is None:
+			continue
 
-		location_num = count['location'].get(location)
-		age_num = count['age'].get(age)
-		gender_num = count['gender'].get(gender)
+		l = user.location
+		a = user.age
+		g = user.gender
+		
+		if l is None:
+			l = '-1'
+
+		if a is None:
+			a = -1
+		else:
+			a = int(a)
+
+		if g is None:
+			g = '-1'
+
+		location_num = (count['location']).get(l)
+		age_num = count['age'].get(a)
+		gender_num = count['gender'].get(g)
 
 		if location_num is None:
-			count['location'][location] = 1
+			count['location'][l] = 1
 		else:
-			count['location'][location] += 1
+			count['location'][l] += 1
 
 		if age_num is None:
-			count['age'][age] = 1
+			count['age'][a] = 1
 		else:
-			count['age'][age] += 1
+			count['age'][a] += 1
 
 		if gender_num is None:
-			count['gender'][gender] = 1
+			count['gender'][g] = 1
 		else:
-			count['gender'][gender] += 1
+			count['gender'][g] += 1
+
 	return count
 
 followers_count = get_count('topic_followers')
 participants_count = get_count('topic_participants')
 
-
+print('topic_followers = ', followers_count)
+print('topic_participants = ', participants_count)
 
 
 
