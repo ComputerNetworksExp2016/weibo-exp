@@ -7,6 +7,7 @@ TOPIC = '1008086d2d90115bda1a5fdcba46100f379dd9'
 
 if Path(DATA_FILE).exists():
     data = pickle.load(open(DATA_FILE, 'rb'))
+    # print(len(data['topic_posts']))
 else:
     exit()
 
@@ -30,6 +31,8 @@ def get_count(key):
 		
 		if l is None:
 			l = '-1'
+		else:
+			l = l.split()[0] # classify location by province
 
 		if a is None:
 			a = -1
