@@ -6,6 +6,7 @@ import json
 import logging
 from pathlib import Path
 import pickle
+import sys
 
 from bs4 import BeautifulSoup
 from requests import Session
@@ -109,8 +110,10 @@ class Weibo(object):
             return pickle.load(open(file, 'rb'))
         else:
             logging.debug('Pickle file (%s) does not exist, creating new client.', file)
-            username = input('Username: ')
-            password = getpass('Password for {}: '.format(username))
+            # username = input('Username: ')
+            # password = getpass('Password for {}: '.format(username))
+            username = sys.argv[1]
+            password = sys.argv[2]
             return cls(username, password)
 
     def get(self, url, **kw):
@@ -162,7 +165,8 @@ class Weibo(object):
     def topic_followers(self, containerid):
         """Return followers of a certain topic."""
         followers_id = []
-        for i in range(2, 501):
+        # for i in range(2, 501):
+        for i in range(int(sys.argv[3]), int(sys.argv[3])+50):
             failure = 0
             while failure < 3:
                 try:
@@ -271,5 +275,5 @@ if __name__ == '__main__':
     # print(followingsID)
     # for post in client.topic_posts('1008086edfd628a87d2ee80e5a4352f13de408'):
     #     print(post)
-    for user in client.topic_followers('1008086edfd628a87d2ee80e5a4352f13de408'):
-        print(user)
+    # for user in client.topic_followers('1008086edfd628a87d2ee80e5a4352f13de408'):
+    #     print(user)
