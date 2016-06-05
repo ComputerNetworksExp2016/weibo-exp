@@ -2,7 +2,7 @@ from pathlib import Path
 import pickle
 from weibo.weibo import Weibo
 
-DATA_FILE = 'data.pickle'
+DATA_FILE = 'data3.pickle'
 TOPIC = '100808cd96538eeddd4fe8f836ebcc74674201'
 
 if Path(DATA_FILE).exists():
