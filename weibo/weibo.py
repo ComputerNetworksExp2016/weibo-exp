@@ -58,7 +58,7 @@ class Weibo(object):
 
     USER_AGENT = 'Mozilla/5.0 (iPhone; CPU iPhone OS 9_3 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Version/9.0 Mobile/13E188a Safari/601.1'
     PICKLE_FILE = 'weibo.pickle'
-    REQUEST_INTERVAL = 5
+    REQUEST_INTERVAL = 10
 
     def __init__(self, username, password):
         """Create a new client."""
