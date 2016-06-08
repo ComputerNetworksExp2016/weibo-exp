@@ -3,11 +3,12 @@ import pickle
 from weibo.weibo import Weibo
 
 DATA_FILE = 'data.pickle'
-TOPIC = '1008086d2d90115bda1a5fdcba46100f379dd9'
+# TOPIC = '100808cd96538eeddd4fe8f836ebcc74674201'
 
 if Path(DATA_FILE).exists():
     data = pickle.load(open(DATA_FILE, 'rb'))
-    # print(len(data['topic_posts']))
+    for l in data:
+    	print(l)
 else:
     exit()
 
@@ -29,7 +30,7 @@ def get_count(key):
 		a = user.age
 		g = user.gender
 		
-		if l is None:
+		if l is None or l == '':
 			l = '-1'
 		else:
 			l = l.split()[0] # classify location by province
@@ -63,21 +64,18 @@ def get_count(key):
 
 	return count
 
-followers_count = get_count('topic_followers')
+# followers_count = get_count('topic_followers')
 participants_count = get_count('topic_participants')
-
-# print('topic_followers = ', followers_count)
-# print('topic_participants = ', participants_count)
 
 with open('participants.csv', 'w') as file:
 	for f in participants_count:
 		for info in participants_count[f]:
 			file.write('%s,%d\n' % (info, participants_count[f][info]))
 
-with open('followers.csv', 'w') as file:
-	for f in followers_count:
-		for info in followers_count[f]:
-			file.write('%s,%d\n' % (info, followers_count[f][info]))
+# with open('followers.csv', 'w') as file:
+# 	for f in followers_count:
+# 		for info in followers_count[f]:
+# 			file.write('%s,%d\n' % (info, followers_count[f][info]))
 
 
 
