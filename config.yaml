@@ -1,0 +1,7 @@
+#cloud-config
+apt_update: true
+packages:
+  - python3-pip
+runcmd:
+  - pip install bs4
+  - git clone https://github.com/ComputerNetworksExp2016/weibo-exp
