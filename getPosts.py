@@ -17,7 +17,8 @@ count = {
 	'repost_num': {'0-50': 0, '50-100': 0, '100-150': 0, '150-200': 0, '200-300': 0, '300-400': 0, '400-500': 0, '>=500': 0},
 	'comment_num': {'0-50': 0, '50-100': 0, '100-150': 0, '150-200': 0, '200-300': 0, '300-400': 0, '400-500': 0, '>=500': 0},
 	'like_num': {'0-50': 0, '50-100': 0, '100-150': 0, '150-200': 0, '200-300': 0, '300-400': 0, '400-500': 0, '>=500': 0},
-	'time': {}
+	'day': {},
+	'hour': {}
 }
 
 for i in data['topic_posts']:
@@ -82,13 +83,20 @@ for i in data['topic_posts']:
 	else:
 		count['like_num']['>=500'] += 1
 
-	t = t.split(' ')[1]
-	hour = t.split(':')[0]
-	t_num = count['time'].get(hour)
-	if t_num is None:
-		count['time'][hour] = 1
+	day = t.split(' ')[0]
+	hour = t.split(' ')[1]
+	hour = hour.split(':')[0]
+
+	hour_num = count['hour'].get(hour)
+	if hour_num is None:
+		count['hour'][hour] = 1
 	else:
-		count['time'][hour] += 1
+		count['hour'][hour] += 1
+	day_num = count['day'].get(day)
+	if day_num is None:
+		count['day'][day] = 1
+	else:
+		count['day'][day] += 1
 
 
 with open('posts.csv', 'w') as file:
