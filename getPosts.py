@@ -11,9 +11,9 @@ else:
     exit()
 
 count = {
-	'repost_num': {'0~5': 0, '5~10': 0, '10~15': 0, '15~20': 0, '20~50': 0, '50~100': 0, '>=100': 0},
-	'comment_num': {'0~5': 0, '5~10': 0, '10~15': 0, '15~20': 0, '20~50': 0, '50~100': 0, '>=100': 0},
-	'like_num': {'0~5': 0, '5~10': 0, '10~15': 0, '15~20': 0, '20~50': 0, '50~100': 0, '>=100': 0},
+	'repost_num': {'0': 0, '1~5': 0, '5~10': 0, '10~15': 0, '15~20': 0, '20~50': 0, '50~100': 0, '>=100': 0},
+	'comment_num': {'0': 0, '1~5': 0, '5~10': 0, '10~15': 0, '15~20': 0, '20~50': 0, '50~100': 0, '>=100': 0},
+	'like_num': {'0': 0, '1~5': 0, '5~10': 0, '10~15': 0, '15~20': 0, '20~50': 0, '50~100': 0, '>=100': 0},
 	'day': {},
 	'hour': {}
 }
@@ -29,8 +29,10 @@ for i in data['topic_posts']:
 	ln = post.like_num
 	t  = str(post.created_at)
 
-	if 0 <= rn < 5:
-		count['repost_num']['0~5'] += 1
+	if rn == 0:
+		count['repost_num']['0'] += 1
+	elif 1 <= rn < 5:
+		count['repost_num']['1~5'] += 1
 	elif 5 <= rn < 10:
 		count['repost_num']['5~10'] += 1
 	elif 10 <= rn < 15:
@@ -44,8 +46,10 @@ for i in data['topic_posts']:
 	else:
 		count['repost_num']['>=100'] += 1
 
-	if 0 <= cn < 5:
-		count['comment_num']['0~5'] += 1
+	if cn == 0:
+		count['comment_num']['0'] += 1
+	elif 1 <= cn < 5:
+		count['comment_num']['1~5'] += 1
 	elif 5 <= cn < 10:
 		count['comment_num']['5~10'] += 1
 	elif 10 <= cn < 15:
@@ -59,8 +63,10 @@ for i in data['topic_posts']:
 	else:
 		count['comment_num']['>=100'] += 1
 
-	if 0 <= ln < 5:
-		count['like_num']['0~5'] += 1
+	if ln == 0:
+		count['like_num']['0'] += 1
+	elif 0 <= ln < 5:
+		count['like_num']['1~5'] += 1
 	elif 5 <= ln < 10:
 		count['like_num']['5~10'] += 1
 	elif 10 <= ln < 15:
