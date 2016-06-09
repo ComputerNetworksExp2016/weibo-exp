@@ -7,16 +7,13 @@ DATA_FILE = 'data.pickle'
 
 if Path(DATA_FILE).exists():
     data = pickle.load(open(DATA_FILE, 'rb'))
-    for l in data:
-    	print(l)
-    print(data['topic_posts'][3983031792070626])
 else:
     exit()
 
 count = {
-	'repost_num': {'0-50': 0, '50-100': 0, '100-150': 0, '150-200': 0, '200-300': 0, '300-400': 0, '400-500': 0, '>=500': 0},
-	'comment_num': {'0-50': 0, '50-100': 0, '100-150': 0, '150-200': 0, '200-300': 0, '300-400': 0, '400-500': 0, '>=500': 0},
-	'like_num': {'0-50': 0, '50-100': 0, '100-150': 0, '150-200': 0, '200-300': 0, '300-400': 0, '400-500': 0, '>=500': 0},
+	'repost_num': {'0~5': 0, '5~10': 0, '10~15': 0, '15~20': 0, '20~50': 0, '50~100': 0, '>=100': 0},
+	'comment_num': {'0~5': 0, '5~10': 0, '10~15': 0, '15~20': 0, '20~50': 0, '50~100': 0, '>=100': 0},
+	'like_num': {'0~5': 0, '5~10': 0, '10~15': 0, '15~20': 0, '20~50': 0, '50~100': 0, '>=100': 0},
 	'day': {},
 	'hour': {}
 }
@@ -32,56 +29,50 @@ for i in data['topic_posts']:
 	ln = post.like_num
 	t  = str(post.created_at)
 
-	if 0 <= rn < 50:
-		count['repost_num']['0-50'] += 1
+	if 0 <= rn < 5:
+		count['repost_num']['0~5'] += 1
+	elif 5 <= rn < 10:
+		count['repost_num']['5~10'] += 1
+	elif 10 <= rn < 15:
+		count['repost_num']['10~15'] += 1
+	elif 15 <= rn < 20:
+		count['repost_num']['15~20'] += 1
+	elif 20 <= rn < 50:
+		count['repost_num']['20~50'] += 1
 	elif 50 <= rn < 100:
-		count['repost_num']['50-100'] += 1
-	elif 100 <= rn < 150:
-		count['repost_num']['100-150'] += 1
-	elif 150 <= rn < 200:
-		count['repost_num']['150-200'] += 1
-	elif 200 <= rn < 300:
-		count['repost_num']['200-300'] += 1
-	elif 300 <= rn < 400:
-		count['repost_num']['300-400'] += 1
-	elif 400 <= rn < 500:
-		count['repost_num']['400-500'] += 1
+		count['repost_num']['50~100'] += 1
 	else:
-		count['repost_num']['>=500'] += 1
+		count['repost_num']['>=100'] += 1
 
-	if 0 <= cn < 50:
-		count['comment_num']['0-50'] += 1
+	if 0 <= cn < 5:
+		count['comment_num']['0~5'] += 1
+	elif 5 <= cn < 10:
+		count['comment_num']['5~10'] += 1
+	elif 10 <= cn < 15:
+		count['comment_num']['10~15'] += 1
+	elif 15 <= cn < 20:
+		count['comment_num']['15~20'] += 1
+	elif 20 <= cn < 50:
+		count['comment_num']['20~50'] += 1
 	elif 50 <= cn < 100:
-		count['comment_num']['50-100'] += 1
-	elif 100 <= cn < 150:
-		count['comment_num']['100-150'] += 1
-	elif 150 <= cn < 200:
-		count['comment_num']['150-200'] += 1
-	elif 200 <= cn < 300:
-		count['comment_num']['200-300'] += 1
-	elif 300 <= cn < 400:
-		count['comment_num']['300-400'] += 1
-	elif 400 <= cn < 500:
-		count['comment_num']['400-500'] += 1
+		count['comment_num']['50~100'] += 1
 	else:
-		count['comment_num']['>=500'] += 1
+		count['comment_num']['>=100'] += 1
 
-	if 0 <= ln < 50:
-		count['like_num']['0-50'] += 1
+	if 0 <= ln < 5:
+		count['like_num']['0~5'] += 1
+	elif 5 <= ln < 10:
+		count['like_num']['5~10'] += 1
+	elif 10 <= ln < 15:
+		count['like_num']['10~15'] += 1
+	elif 15 <= ln < 20:
+		count['like_num']['15~20'] += 1
+	elif 20 <= ln < 50:
+		count['like_num']['20~50'] += 1
 	elif 50 <= ln < 100:
-		count['like_num']['50-100'] += 1
-	elif 100 <= ln < 150:
-		count['like_num']['100-150'] += 1
-	elif 150 <= ln < 200:
-		count['like_num']['150-200'] += 1
-	elif 200 <= ln < 300:
-		count['like_num']['200-300'] += 1
-	elif 300 <= ln < 400:
-		count['like_num']['300-400'] += 1
-	elif 400 <= ln < 500:
-		count['like_num']['400-500'] += 1
+		count['like_num']['50~100'] += 1
 	else:
-		count['like_num']['>=500'] += 1
+		count['like_num']['>=100'] += 1
 
 	day = t.split(' ')[0]
 	hour = t.split(' ')[1]
@@ -98,11 +89,10 @@ for i in data['topic_posts']:
 	else:
 		count['day'][day] += 1
 
-
 with open('posts.csv', 'w') as file:
 	for f in count:
 		file.write('%s\n' % f)
-		for info in count[f]:
+		for info in sorted(count[f]):
 			file.write('%s,%d\n' % (info, count[f][info]))
 		file.write('\n')
 
